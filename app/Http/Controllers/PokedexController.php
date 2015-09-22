@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Pokemon;
 
 class PokedexController extends Controller
 {
@@ -15,7 +16,10 @@ class PokedexController extends Controller
      */
     public function index()
     {
-        return 'No pokemon yet';
+        // Get all Pokemon from the database
+        $allPokemon = Pokemon::all();
+
+        return view('pokedex.index', compact('allPokemon'));
     }
 
     /**
