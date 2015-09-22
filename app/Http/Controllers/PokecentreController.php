@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\User;
 
 class PokecentreController extends Controller
 {
@@ -19,7 +20,10 @@ class PokecentreController extends Controller
      */
     public function index()
     {
-        return view('pokecentre.index');
+        // Find out how many registered trainers there are
+        $totalTrainers = User::all()->count();
+
+        return view('pokecentre.index', compact('totalTrainers'));
     }
 
     /**
