@@ -16,6 +16,8 @@
 		<ul>
 			<li>Total Registered Trainers: {{ $totalTrainers }}</li>
 		</ul>
+		<a href="/pokecentre/capture"class="tiny button"> add your capture</a>
+
 	</div>
 </div>
 

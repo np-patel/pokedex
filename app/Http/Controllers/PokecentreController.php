@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Pokemon;
 
 class PokecentreController extends Controller
 {
@@ -24,6 +25,14 @@ class PokecentreController extends Controller
         $totalTrainers = User::all()->count();
 
         return view('pokecentre.index', compact('totalTrainers'));
+    }
+
+    public function capture()
+    {
+
+        // $allPokemon = Pokemon::all();
+        $allPokemon = \DB::table('pokemon')->orderBy('name')->get();
+        return view('pokecentre.capture', compact('allPokemon'));
     }
 
     /**
