@@ -14,10 +14,12 @@
 					<option value="{{$pokemon->id}}">{{$pokemon->name}}</option>
 					@endforeach
 				</select>
+				{{$errors->first('pokemon')}}
 			</div>
 			<div>
 				<label for="photo">Photo: </label>
 				<input type="file" id="photo" name="photo">
+				{{$errors->first('photo')}}
 			</div>
 			<input type="submit" value="Add To Collection" class="tiny button">
 		</form>
