@@ -78,6 +78,60 @@ class PokecentreController extends Controller
 
     }
 
+    public function getcaptures(){
+        $captures = Capture::where('user_id', \Auth::user()->id)->get();
+
+        return view('pokecentre.captures', compact('captures'));
+    }
+
+    public function editCapture($id){
+        $capture = Capture::findOrFail($id);
+        $allPokemon = Pokemon::orderBy('name')->get();
+
+        return view('pokecentre.editCapture', compact('capture', 'allPokemon'));
+    }
+
+    public function updateCapture(Request $request, $id){
+
+        $this->validate($request, [
+
+            'pokemon'=> 'required|exists:pokemon,id',
+            'photo'=> 'image'
+
+            ]);
+
+        //get info on the capture
+        $capture = Capture::findOrFail($id);
+
+
+        if ( $request->hasFile('photo')) {
+            
+        //Generate a file Name
+        $fileName = uniqid().'.'.$request->file('photo')->getClientOriginalExtension();
+
+        \Image::make($request->file('photo') )
+            ->resize(320, null, function($constraint){
+                $constraint->aspectRatio();
+            })->save('img/captures/'.$fileName);
+
+            
+
+
+            //delete the old image
+            \File::Delete('img/captures/'.$capture->photo);
+
+            $capture->photo = $fileName;
+
+
+        }
+
+        $capture->save();
+
+        // return 'time to update';
+        return redirect('pokecentre/captures');
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

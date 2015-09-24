@@ -19,6 +19,7 @@
 			<li>Total Captures: {{$totalGlobalCaptures}}</li>
 		</ul>
 		<a href="/pokecentre/capture"class="tiny button"> add your capture</a>
+		<a href="/pokecentre/captures"class="tiny button"> See your Captures ({{ $totalTrainerCaptures }})</a>
 
 	</div>
 </div>
