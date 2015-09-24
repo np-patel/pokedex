@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Pokemon;
-use APP\Capture;
+use App\Capture;
 
 class PokecentreController extends Controller
 {
@@ -25,7 +25,11 @@ class PokecentreController extends Controller
         // Find out how many registered trainers there are
         $totalTrainers = User::all()->count();
 
-        return view('pokecentre.index', compact('totalTrainers'));
+        $totalTrainerCaptures = Capture::where('user_id',\Auth::user()->id)->count();
+
+        $totalGlobalCaptures = Capture::all()->count();
+
+        return view('pokecentre.index', compact('totalTrainers', 'totalTrainerCaptures', 'totalGlobalCaptures'));
     }
 
     public function capture()
@@ -46,7 +50,21 @@ class PokecentreController extends Controller
             ]);
 
         $capture = new Capture();
-        $capture->photo = 'test.jpeg';
+
+        $fileName = uniqid().'.'.$request->file('photo')->getClientOriginalExtension();
+
+        \Image::make($request->file('photo') )
+            ->resize(320, null, function($constraint){
+                $constraint->aspectRatio();
+            })->save('img/captures/'.$fileName);
+
+        // $capture->photo = 'test.jpeg';
+
+        $capture->photo = $fileName;
+
+
+
+
         $capture->user_id = \Auth::user()->id;
         $capture->pokemon_id = $request->pokemon;
 

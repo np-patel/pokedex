@@ -52,9 +52,9 @@ class PokedexController extends Controller
     public function show($name)
     {
         //get additional info about pokemon
-        $info = Pokemon::where('name', $name)->firstOrFail();
+        $pokemon = Pokemon::where('name', $name)->firstOrFail();
 
-        return view('pokedex.show', compact('info'));
+        return view('pokedex.show', compact('pokemon'));
     }
 
     /**
