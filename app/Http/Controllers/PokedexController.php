@@ -22,6 +22,23 @@ class PokedexController extends Controller
         return view('pokedex.index', compact('allPokemon'));
     }
 
+    public function vote($id, $userVote){
+        // return $id.' '.$vote;
+
+        //make sure the capture is real and vote is valid
+
+        $vote = new \App\Vote();
+
+        $vote->user_id = \Auth::user()->id;
+        $vote->capture_id = $id;
+        $vote->vote = $userVote == 'up' ? 'true' : 'false';
+        $vote->save();
+
+        $capture = \App\capture::findOrFail();
+
+        return redirect('pokedex/'.$capture->pokemon->name)
+    }
+
     /**
      * Show the form for creating a new resource.
      *

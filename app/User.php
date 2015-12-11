@@ -43,7 +43,9 @@ class User extends Model implements AuthenticatableContract,
     public function capture(){
         return $this->hasMany('App\Capture');
     }
-
+    public function vote(){
+        return $this->hasMany('App\Vote');
+    }
 
     
 }

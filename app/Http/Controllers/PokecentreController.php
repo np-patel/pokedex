@@ -45,7 +45,8 @@ class PokecentreController extends Controller
         $this->validate($request,[
 
                 'pokemon'=> 'required|exists:pokemon,id',
-                'photo'=> 'required|image'
+                'photo'=> 'required|image',
+                'location'=> 'in:Kanto,Johto,Hoenn,Sinnoh,Unova,Kalos'
 
             ]);
 
@@ -59,6 +60,10 @@ class PokecentreController extends Controller
             })->save('img/captures/'.$fileName);
 
         // $capture->photo = 'test.jpeg';
+
+        $capture->location = $request->location;
+        $capture->attack = rand(0, 350);
+        $capture->defense = rand(0, 350);
 
         $capture->photo = $fileName;
 
@@ -85,7 +90,14 @@ class PokecentreController extends Controller
     }
 
     public function editCapture($id){
-        $capture = Capture::findOrFail($id);
+
+        try{
+            $capture = Capture::where('user_id', \Auth::user()->id)->where('id', $id)->firstOrFail();
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            // return 'Stop messing with the URL';
+            return view('errors.captureNotFound');
+        }
+
         $allPokemon = Pokemon::orderBy('name')->get();
 
         return view('pokecentre.editCapture', compact('capture', 'allPokemon'));
@@ -122,14 +134,68 @@ class PokecentreController extends Controller
 
             $capture->photo = $fileName;
 
-
         }
+
+        if (\Carbon\Carbon::now()->diffInDays($capture->updated_at) > 5) {
+            
+            if ($capture->attack < 350) {
+                $capture->attack += rand(0, 10);
+
+                if ($capture->attack > 350) {
+                    $capture->attack = 350;
+                }
+            }
+
+            if ($capture->defense < 350) {
+                $capture->defense += rand(0, 10);
+
+                if ($capture->defense > 350) {
+                    $capture->defense = 350;
+                }
+            }
+        }
+
+        $capture->pokemon_id = $request->pokemon;
 
         $capture->save();
 
-        // return 'time to update';
         return redirect('pokecentre/captures');
 
+    }
+
+    public function releaseCapture($id){
+
+        //find info on the pokemon the user wants to release
+        try{
+            $capture = Capture::where('user_id', \Auth::user()->id)->where('id', $id)->firstOrFail();
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            // return 'Stop messing with the URL';
+            return view('errors.captureNotFound');
+        }
+
+        return view('pokecentre.release', compact('capture'));
+
+    }
+
+    public function doReleaseCapture($id){
+
+        try{
+            $capture = Capture::where('user_id', \Auth::user()->id)->where('id', $id)->firstOrFail();
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+            // return 'Stop messing with the URL';
+            return view('errors.captureNotFound');
+        }
+
+        //delete the old image
+            \File::Delete('img/captures/'.$capture->photo);
+
+        \Session::flash('release', 'Bye Bye '.$capture->pokemon->name);
+
+        Capture::destroy($id);
+
+
+
+        return redirect('pokecentre/captures');
     }
 
     /**

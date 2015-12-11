@@ -13,4 +13,8 @@ class Capture extends Model
     public function user(){
     	return $this->belongsTo('App\User');
     }
+
+    public function vote(){
+        return $this->hasMany('App\Vote');
+    }
 }

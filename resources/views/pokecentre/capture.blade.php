@@ -16,6 +16,21 @@
 				</select>
 				{{$errors->first('pokemon')}}
 			</div>
+
+			<div>
+				<label for="location">Location: </label>
+				<select name="location" id="location">
+					<option>Where did you capture this Pokemon?</option>
+					<option>Kanto</option>
+					<option>Johto</option>
+					<option>Hoenn</option>
+					<option>Sinnoh</option>
+					<option>Unova</option>
+					<option>Kalos</option>
+				</select>
+				{{$errors->first('location')}}
+			</div>
+
 			<div>
 				<label for="photo">Photo: </label>
 				<input type="file" id="photo" name="photo">

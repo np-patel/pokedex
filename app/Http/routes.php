@@ -28,4 +28,9 @@ Route::post('pokecentre/capture', 'PokecentreController@postCapture');
 Route::get('pokecentre/captures', 'PokecentreController@getCaptures');
 
 Route::get('pokecentre/captures/{id}/edit', 'PokecentreController@editCapture');
+Route::get('pokecentre/captures/{id}/release', 'PokecentreController@releaseCapture');
+Route::get('pokecentre/captures/{id}/doRelease', 'PokecentreController@doReleaseCapture');
+
 Route::post('pokecentre/captures/{id}', 'PokecentreController@updateCapture');
+
+Route::get('pokedex/vote/{id}/{vote}', 'PokedexController@vote');
